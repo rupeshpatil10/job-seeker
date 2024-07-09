@@ -1,0 +1,14 @@
+{
+    "name": "job-portal",
+    "private": true,
+    "scripts": {
+      "build:job-portal-client": "cd job-portal-client && npm run build",
+      "start:job-portal-server": "cd job-portal-server && npm start",
+      "build": "npm run build:job-portal-client",
+      "start": "concurrently \"npm run start:job-portal-server\" \"cd job-portal-client && npm run dev\""
+    },
+    "devDependencies": {
+      "concurrently": "^8.2.2"
+    }
+  }
+  
