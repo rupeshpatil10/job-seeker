@@ -2,9 +2,10 @@
     "name": "job-portal",
     "private": true,
     "scripts": {
+        "install-vite": "npm install -g vite",
         "build:job-portal-client": "cd job-portal-client && npm run build",
         "start:job-portal-server": "cd job-portal-server && npm start",
-        "build": "npm run build:job-portal-client",
+        "build": "npm run install-vite && npm run build:job-portal-client",
         "start": "concurrently \"npm run start:job-portal-server\" \"cd job-portal-client && npm run dev\""
     },
     "devDependencies": {
