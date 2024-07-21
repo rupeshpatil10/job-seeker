@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "postinstall": "npm install"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^4.3.1",
@@ -21,8 +22,7 @@
     "react-router-dom": "^6.24.1",
     "react-select": "^5.8.0",
     "sweetalert2": "^11.12.2",
-    "url": "^0.11.3",
-    "vite": "^5.3.1"
+    "url": "^0.11.3"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
@@ -33,6 +33,7 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "postcss": "^8.4.39",
-    "tailwindcss": "^3.4.4"
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.3.4"
   }
 }
