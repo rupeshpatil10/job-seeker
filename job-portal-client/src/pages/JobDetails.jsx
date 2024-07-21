@@ -2,11 +2,15 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 import PageHeader from "../components/PageHeader";
 
 const JobDetails = () => {
   const { id } = useParams();
+  console.log(id);
   const [job, setJob] = useState([]);
+
+  const formattedDate = new Date(job.postingDate).toLocaleDateString();
 
   useEffect(() => {
     fetch(`http://localhost:5000/job/${id}`)
@@ -60,7 +64,7 @@ const JobDetails = () => {
               <strong>Job Type:</strong> {job.employmentType || "FTE"}
             </p>
             <p>
-              <strong>Date Posted:</strong> {job.postingDate || "2024-07-07"}
+              <strong>Date Posted:</strong> {formattedDate || "2024-07-07"}
             </p>
             <p>
               <strong>Required Stream:</strong> {job.stream || "BE/B-TECH"}
@@ -84,12 +88,9 @@ const JobDetails = () => {
             </p>
           </div>
 
-          <button
-            onClick={handleApply}
-            className="bg-blue-600 text-white px-8 py-2 rounded"
-          >
-            Apply Now
-          </button>
+          
+          <button className="bg-blue-600 py-2 px-6 text-white rounded-sm">
+            <Link to={`/application-job/${job._id}`}>Apply Now</Link></button>
 
           <div className="bg-white p-4 shadow-md rounded-md mt-4">
             <h3 className="text-xl font-semibold mb-2">Get Job Alerts</h3>

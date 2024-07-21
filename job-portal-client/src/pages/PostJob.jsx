@@ -103,20 +103,20 @@ const PostJob = () => {
           {/* 2nd row */}
           <div className="create-job-flex mt-6">
           <div className="lg:w-1/2 w-full">
-              <label className="block mb-2 text-lg">Salary Type</label>
-              <select {...register("salaryType")} className="create-job-input">
-                <option value=''>Choose Your salary</option>
-                <option value="2024">2024</option>
-                <option value="2022">2022</option>
-                <option value="2021">2021</option>
-              </select>
-            </div>
-            <div className="lg:w-1/2 w-full">
-              <label className="block mb-2 text-lg">Max Salary</label>
+              <label className="block mb-2 text-lg">Required Stream</label>
               <input
                 type="text"
-                placeholder="₹ 10 LPA"
-                {...register("maxPrice")}
+                placeholder="Ex: BE/ IT /BTECH"
+                {...register("requiredStream")}
+                className="create-job-input"
+              />
+            </div>
+            <div className="lg:w-1/2 w-full">
+              <label className="block mb-2 text-lg">Bacth</label>
+              <input
+                type="text"
+                placeholder="Ex: 2020"
+                {...register("batch")}
                 className="create-job-input"
               />
             </div>
@@ -152,6 +152,7 @@ const PostJob = () => {
                 {...register("postingDate")}
                 className="create-job-input"
               />
+              {/* postingDate.slice(0, 10); */}
             </div>
             <div className="lg:w-1/2 w-full">
               <label className="block mb-2 text-lg">Experience Level</label>
@@ -170,22 +171,22 @@ const PostJob = () => {
           <div className="lg:w-full w-full mt-6">
             <label className="block mb-2 text-lg">Required Skill Sets</label>
             <Controller
-              name="requiredSkillSets"
-              control={control}
-              render={({ field }) => (
-                <CreatableSelect
-                  {...field}
-                  isMulti
-                  options={options}
-                  value={selectedOption}
-                  onChange={(options) => {
-                    setselectedOption(options);
-                    field.onChange(options);
-                  }}
-                  className="create-job-input"
-                />
-              )}
-            />
+  name="requiredSkillSets"
+  control={control}
+  render={({ field }) => (
+    <CreatableSelect
+      {...field}
+      isMulti
+      options={options}
+      value={selectedOption}
+      onChange={(options) => {
+        setselectedOption(options);
+        field.onChange(options.map((option) => option.value));
+      }}
+      className="create-job-input"
+    />
+  )}
+/>
           </div>
           {/* 6th row */}
           <div className="create-job-flex mt-6">

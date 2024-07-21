@@ -20,6 +20,12 @@ const Location = ({ handleChange }) => {
         title="Pune"
         name="test"
       />
+      {/* <InputField
+        handleChange={handleChange}
+        value={2023}
+        title="2023"
+        name="test"
+      /> */}
       <InputField
         handleChange={handleChange}
         value="Banglore"

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const MyJobs = () => {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState([]); // initialize with an empty array
   const [searchText, setSearchText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,10 +14,18 @@ const MyJobs = () => {
 
   const fetchJobs = () => {
     setIsLoading(true);
-    fetch(`http://localhost:5000/myJobs/google@gmail.com`)
+    fetch(`http://localhost:5000/all-jobs`)
       .then((res) => res.json())
       .then((data) => {
-        setJobs(data);
+        if (Array.isArray(data)) { // check if data is an array
+          setJobs(data);
+        } else {
+          console.error("Invalid data format. Expected an array.");
+        }
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching jobs:", error);
         setIsLoading(false);
       });
   };
@@ -26,15 +34,16 @@ const MyJobs = () => {
   const indexOfFirstItem = indexOfLastItem - jobsPerPage;
   const currentJobs = jobs.slice(indexOfFirstItem, indexOfLastItem);
 
+
   const nextPage = () => {
     if (indexOfLastItem < jobs.length) {
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage((currentPage) => currentPage + 1);
     }
   };
-
+  
   const previousPage = () => {
     if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
+      setCurrentPage((currentPage) => currentPage - 1);
     }
   };
 
@@ -45,21 +54,20 @@ const MyJobs = () => {
     setJobs(filteredJobs);
     setIsLoading(false);
   };
-  console.log(searchText);
-
+  
   const handleDelete = (id) => {
     fetch(`http://localhost:5000/delete-job/${id}`, {
       method: "DELETE",
     })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.acknowledged === true) {
-          alert("Job deleted successfully");
-          setJobs(jobs.filter((job) => job._id !== id));
-        }
-      });
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.acknowledged === true) {
+        alert("Job deleted successfully");
+        setJobs(jobs.filter((job) => job._id !== id));
+      }
+    });
   };
-
+  
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">
       <div className="my-jobs-container">
@@ -121,7 +129,7 @@ const MyJobs = () => {
                       Salary
                     </th>
                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
-                      Edit
+                      <Link to='/edit-job'>Edit</Link>
                     </th>
                     <th className="px-6 bg-blueGray-50 text-blueGray-500 align-middle border border-solid border-blueGray-100 py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left">
                       Delete
@@ -130,7 +138,7 @@ const MyJobs = () => {
                 </thead>
                 <tbody>
                   {
-                    jobs.map((job, index) => (
+                    currentJobs.map((job, index) => (
                       <tr key={index}>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-blueGray-700">
                       {index + 1}

@@ -115,7 +115,7 @@ const UpdateJob = () => {
             <div className="lg:w-1/2 w-full">
               <label className="block mb-2 text-lg">Salary Type</label>
               <select {...register("salaryType")} className="create-job-input">
-                <option value={salaryType}>{salaryType}</option>
+                <option value={"Hourly"}>Hourly</option>
                 <option value="Monthly">Monthly</option>
                 <option value="Yearly">Yearly</option>
               </select>
@@ -149,7 +149,7 @@ const UpdateJob = () => {
                 {...register("experienceLevel")}
                 className="create-job-input"
               >
-                <option value={experienceLevel}>{experienceLevel}</option>
+                <option value='Work Remotely'>Work Remotely</option>
                 <option value="Any experience">Any experience</option>
                 <option value="Internship">Internship</option>
                 {/* <option value="Work remotely">Work remotely</option> */}
@@ -186,9 +186,9 @@ const UpdateJob = () => {
                 {...register("employmentType")}
                 className="create-job-input"
               >
-                <option value={employmentType}>{employmentType}</option>
+                {/* <option value={employmentType}>{employmentType}</option> */}
                 <option value="Full-time">Full-time</option>
-                  {/* <option value="Temporary">Temporary</option> */}
+                  <option value="Temporary">Temporary</option>
                 <option value="Part-time">Part-time</option>
               </select>
             </div>

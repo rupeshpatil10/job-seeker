@@ -6,7 +6,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import NewsLetter from "../components/NewsLetter";
 
 const Home = () => {
-  const [selectedCategory, setselectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [jobs, setJobs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -18,6 +18,7 @@ const Home = () => {
     fetch("http://localhost:5000/all-jobs")
       .then((res) => res.json())
       .then((data) => {
+        console.log("Fetched jobs data:", data);
         setJobs(data);
         setIsLoading(false);
       })
@@ -26,21 +27,27 @@ const Home = () => {
         setIsLoading(false);
       });
   }, []);
+  
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const filteredItems = jobs.filter(
-    (job) => job.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1
-  );
+  // const filteredItems = jobs.filter(
+  //   (job) => job.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1
+  // );
+  const filteredItems = Array.isArray(jobs)
+  ? jobs.filter(
+      (job) => job.jobTitle.toLowerCase().indexOf(query.toLowerCase()) !== -1
+    )
+  : [];
 
   const handleChange = (event) => {
-    setselectedCategory(event.target.value);
+    setSelectedCategory(event.target.value);
   };
 
   const handleClick = (event) => {
-    setselectedCategory(event.target.value);
+    setSelectedCategory(event.target.value);
   };
 
   // Pagination calculation
@@ -64,59 +71,57 @@ const Home = () => {
 
   const filteredData = (jobs, selected, query) => {
     let filteredJobs = jobs;
-
-    //filtering input items
+  
+    // Filtering input items
     if (query) {
       filteredJobs = filteredItems;
     }
-
-    // if (selected) {
-    //   filteredJobs = filteredJobs.filter((job) => {
-    //     const jobLocationMatch = job.jobLocation.toLowerCase() === selected.toLowerCase();
-    //     const salaryTypeMatch = job.salaryType.toLowerCase() === selected.toLowerCase();
-    //     const postingDateMatch = job.postingDate >= selected;
-    //     const maxPriceMatch = parseInt(job.maxPrice) <= parseInt(selected);
-    //     const employmentTypeMatch = job.employmentType.toLowerCase() === selected.toLowerCase();
-    //     const experienceLevelMatch = job.experienceLevel.toLowerCase() === selected.toLowerCase();
-        
-    //     return jobLocationMatch || experienceLevelMatch || salaryTypeMatch || postingDateMatch || maxPriceMatch || employmentTypeMatch;
-    //   });
-    //   console.log(filteredJobs);
-    // }
+  
+    // Category filtering
     if (selected) {
-      filteredJobs = filteredJobs.filter((job) => {
-        const jobLocationMatch = job?.jobLocation?.toLowerCase() === selected.toLowerCase();
-        const salaryTypeMatch = job?.salaryType?.toLowerCase() === selected.toLowerCase();
-        const postingDateMatch = job?.postingDate >= selected;
-        const maxPriceMatch = parseInt(job.maxPrice) <= parseInt(selected) || parseInt(job.minPrice) <= parseInt(selected);
-        const employmentTypeMatch = job?.employmentType?.toLowerCase() === selected.toLowerCase();
-        const experienceLevelMatch = job?.experienceLevel?.toLowerCase() === selected.toLowerCase();
-
-        return jobLocationMatch || experienceLevelMatch || salaryTypeMatch || postingDateMatch || maxPriceMatch || employmentTypeMatch;
-      });
-      console.log(filteredJobs);
+      if (Array.isArray(jobs)) {
+        filteredJobs = filteredJobs.filter((job) => {
+          const jobLocationMatch =
+            job?.jobLocation?.toLowerCase() === selected.toLowerCase();
+          const salaryTypeMatch =
+            job?.salaryType?.toLowerCase() === selected.toLowerCase();
+          const postingDateMatch = job?.postingDate >= selected;
+          const maxPriceMatch =
+            parseInt(job.maxPrice) <= parseInt(selected) ||
+            parseInt(job.minPrice) <= parseInt(selected);
+          const employmentTypeMatch =
+            job?.employmentType?.toLowerCase() === selected.toLowerCase();
+          const experienceLevelMatch =
+            job?.experienceLevel?.toLowerCase() === selected.toLowerCase();
+  
+          return (
+            jobLocationMatch ||
+            experienceLevelMatch ||
+            salaryTypeMatch ||
+            postingDateMatch ||
+            maxPriceMatch ||
+            employmentTypeMatch
+          );
+        });
+        console.log(filteredJobs);
+      } else {
+        console.error("jobs is not an array");
+        return []; // return an empty array to avoid errors
+      }
     }
-    
-    //category filtering
-    // if (selected) {
-    //   filteredJobs = filteredJobs.filter((job) => {
-    //      return job.jobLocation.toLowerCase() === selected.toLowerCase() ||
-    //      job.salaryType.toLowerCase() === selected.toLowerCase() ||
-    //      job.postingDate <= selected ||
-    //      parseInt(job.maxPrice) <= parseInt(selected) ||
-    //      job.employmentType.toLowerCase() === selected.toLowerCase()
-    //   });
-    //   // experienceLevel.toLowerCase() === selected.toLowerCase() ||
-    //   console.log(filteredJobs);
-    // }
-
-    const { startIndex, endIndex } = calPageRange();
-    filteredJobs = filteredJobs.slice(startIndex, endIndex);
-
-    return filteredJobs.map((data, i) => {
-      return <Card key={i} data={data} />;
-    });
-  };
+  
+    // const { startIndex, endIndex } = calPageRange();
+    // filteredJobs = filteredJobs.slice(startIndex, endIndex);
+    if (Array.isArray(filteredJobs)) {
+      const { startIndex, endIndex } = calPageRange();
+      filteredJobs = filteredJobs.slice(startIndex, endIndex);
+    } else {
+      console.error("filteredJobs is not an array");
+      return []; // return an empty array to avoid errors
+    }
+  
+    return filteredJobs.map((data, i) => <Card key={i} data={data} jobId={jobs.id} />);
+  }; 
 
   const result = filteredData(jobs, selectedCategory, query);
 
@@ -126,7 +131,7 @@ const Home = () => {
 
       <div className="bg-[#F9F9F9] md:grid grid-cols-4 gap-8 lg:px-24 px-4 py-12">
         <div className="bg-white p-4 rounded">
-          <Sidebar handleChange={handleChange} handleClick={handleClick}/>
+          <Sidebar handleChange={handleChange} handleClick={handleClick} />
         </div>
 
         <div className="col-span-2 bg-white p-4 rounded-sm">
